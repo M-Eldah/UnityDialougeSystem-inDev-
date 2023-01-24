@@ -1,0 +1,84 @@
+{
+  "name": "DialougeName",
+  "id": 2,
+  "startIndex": 0,
+  "Nodes": [
+    {
+      "CommentIndex": 0,
+      "Name": "SingleNode-ID:0",
+      "Id": 0,
+      "Text": [
+        "Hello"
+      ],
+      "Extra": [
+        "0",
+        "0",
+        "False"
+      ],
+      "Choices": [
+        "Dialouge"
+      ],
+      "Pos": {
+        "x": 199.0,
+        "y": 191.0,
+        "normalized": {
+          "x": 0.7214598,
+          "y": 0.692456365,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.00000012
+        },
+        "magnitude": 275.829651,
+        "sqrMagnitude": 76082.0
+      },
+      "NodeType": 0,
+      "ConnectedNodes": [
+        1
+      ],
+      "subType": 0,
+      "Obj": "",
+      "Method": "",
+      "pause": false,
+      "hasParameter": false,
+      "Tag": null
+    },
+    {
+      "CommentIndex": 0,
+      "Name": "SingleNode-ID:1",
+      "Id": 1,
+      "Text": [
+        "Hi"
+      ],
+      "Extra": [
+        "0",
+        "0",
+        "False"
+      ],
+      "Choices": [
+        "Dialouge"
+      ],
+      "Pos": {
+        "x": 489.0,
+        "y": 191.0,
+        "normalized": {
+          "x": 0.9314675,
+          "y": 0.3638247,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.00000012
+        },
+        "magnitude": 524.9781,
+        "sqrMagnitude": 275602.0
+      },
+      "NodeType": 0,
+      "ConnectedNodes": [
+        -1
+      ],
+      "subType": 0,
+      "Obj": "",
+      "Method": "",
+      "pause": false,
+      "hasParameter": false,
+      "Tag": null
+    }
+  ],
+  "Group": []
+}

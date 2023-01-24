@@ -1,0 +1,72 @@
+/*Containes*/
+.ActionNode
+{
+	background-color:#c0392b;
+}
+.ActionNode>*>*>*>*>*>.unity-foldout{
+	padding: 8px;
+	background-color:#e74c3c;
+}
+.ActionNode>*>*>*>*>*>.unity-foldout>#unity-content{
+	padding: 8px;
+	background-color:#c0392b;
+	border-radius:4px;
+}
+.ActionNode>#contents>#top>#output>Port{
+	padding: 8px;
+	background-color:#c0392b;
+	border-radius:4px;
+}
+.MultiNode
+{
+	background-color:#192a56;
+}
+.MultiNode>*>*>*>*>*>.unity-foldout{
+	padding: 8px;
+	background-color:#273c75;
+}
+.MultiNode>*>*>*>*>*>.unity-foldout>#unity-content{
+	padding: 8px;
+	background-color:#192a56;
+	border-radius:4px;
+}
+.MultiNode>#contents>#top>#output>Port{
+	padding: 8px;
+	background-color:#192a56;
+	border-radius:4px;
+}
+.SingleNode{
+
+	background-color:#192a56;
+}
+.SingleNode>*>*>*>*>*>.unity-foldout{
+	padding: 8px;
+	background-color:#273c75;
+}
+.SingleNode>*>*>*>*>*>.unity-foldout>#unity-content{
+	padding: 8px;
+	background-color:#192a56;
+	border-radius:4px;
+}
+.SpeachText
+{
+	max-width: 260px;
+	flex-direction:column;
+	justify-content: flex-start;
+}
+.unity-text-field__input
+{
+	/*Allows the text box to expand to fit the text once maximum length have been reached*/
+	white-space:Normal;
+}
+.unity-text-field
+{
+	/*Allows the text box to expand to fit the text once maximum length have been reached*/
+	white-space:Normal;
+}
+/*DSystem-node_custom-data-Container
+{
+	background-color:#58B19F;
+	border-radius:4px;
+	padding: 8px;
+}*/

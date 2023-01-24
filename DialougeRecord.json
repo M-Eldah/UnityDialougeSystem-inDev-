@@ -1,0 +1,17 @@
+{
+  "DialougeName": {
+    "startindex": 0,
+    "modified": {
+      "2,3": false,
+      "2,4": false
+    }
+  },
+  "D2": {
+    "startindex": 2,
+    "modified": {}
+  },
+  "MultiChoiceTest": {
+    "startindex": 0,
+    "modified": {}
+  }
+}
