@@ -22,7 +22,6 @@ namespace DSystem.Elements
         {
             if (extraValues.Count == 0)
             {
-                Debug.Log("Zero");
                 extraValues.Add(""); 
             }
             //input container
@@ -30,6 +29,7 @@ namespace DSystem.Elements
             //output container
             Port Choice = this.CreatePort("Output");
             Choice.portName = $"{Id}Output";
+            output.Add(Choice);
             outputContainer.Add(Choice);
         }
     }

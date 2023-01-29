@@ -79,7 +79,7 @@ public class DialougeController : MonoBehaviour
             case TextType.SingleNode:
                 multi.SetActive(false);
                 single.SetActive(true);
-                if (Node.Dialouge.DialougeLocked)
+                if (Node.Dialouge.locked)
                 {
                     DsData NewNode = DialogSystem.DNext();
                     UpdateDialougeUi(NewNode);
@@ -94,7 +94,7 @@ public class DialougeController : MonoBehaviour
                 Choiceholder.GetComponent<RectTransform>().sizeDelta = new Vector2(0, Node.Choices.Count * 35 + (Node.Choices.Count - 1) * 8);
                 for (int i = 0; i < Node.Choices.Count; i++)
                 {
-                    if (Node.Choices[i].DialougeLocked)
+                    if (Node.Choices[i].locked)
                     {
                         continue;
                     }
@@ -104,7 +104,7 @@ public class DialougeController : MonoBehaviour
                 }
                 break;
             case TextType.EmptyNode:
-                if(Node.clip!=null)
+                if (Node.clip != null)
                 {
                     source.PlayOneShot(Node.clip);
                 }

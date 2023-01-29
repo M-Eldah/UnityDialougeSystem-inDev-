@@ -41,38 +41,33 @@ namespace DSystem.Elements
         public override void Draw()
         {
             //Main Container
-            base.Draw();
-            if(extraValues.Count==0)
-            {
-                extraValues.Add("False"); extraValues.Add("False");
-                extraValues.Add("NA"); extraValues.Add("NA");
-            }
+            base.Draw(true,"Value");
             Toggle ValueType = DSElementUtilities.CreateToggle("Property");
             ValueType.tooltip = "Type of value you want to change";
             ValueType.RegisterValueChangedCallback(evt =>
             {
-                extraValues[0] = evt.newValue.ToString();
-                ValueType.label = bool.Parse(extraValues[0]) ? "Field" : "Property";
+                q_bool1 = evt.newValue;
+                ValueType.label = q_bool1 ? "Field" : "Property";
             }
             );
             Toggle Direction = DSElementUtilities.CreateToggle("Lower");
             Direction.tooltip = "Type of value you want to change";
             Direction.RegisterValueChangedCallback(evt =>
             {
-                extraValues[1] = evt.newValue.ToString();
-                Direction.label = bool.Parse(extraValues[1]) ? "Greater" : "Lower";
+                q_bool2 = evt.newValue;
+                Direction.label = q_bool2 ? "Greater" : "Lower";
             }
             );
             DropdownField dropdownmethods = DSElementUtilities.CreateDropDownMenu("Properties",
-            evt => { extraValues[3] = evt.newValue;
+            evt => { q_string2 = evt.newValue;
             });
             DropdownField dropdownobjects = DSElementUtilities.CreateDropDownMenu("Objects", v => {
-                extraValues[2] = v.newValue;
+                q_string1 = v.newValue;
                     GameObject gameObject = GameObject.Find(v.newValue);
                  if (gameObject != null)
                  {
                      dropdownmethods.choices.Clear();
-                     if (!bool.Parse(extraValues[0]))
+                     if (!q_bool1)
                      {
                          List<PropertyInfo> methodz = UtilityFunctions.GetProperties(gameObject);
                          foreach (PropertyInfo method in methodz)
@@ -100,7 +95,7 @@ namespace DSystem.Elements
             {
                 choices.Add($"New Choice{choices.Count}");
                 extraValues.Add("Value");
-                Port Choice = CreateChoice(choices.Count - 1);
+                VisualElement Choice = CreateChoice(choices.Count - 1);
                 outputContainer.Add(Choice);
                 RefreshExpandedState();
             }
@@ -113,42 +108,45 @@ namespace DSystem.Elements
                 dropdownobjects.choices.Add(obj.name);
             }
 
-            //Port Container
             if (choices.Count == 0)
             {
                 choices.Add($"New Choice{choices.Count}");
                 extraValues.Add("Value");
-                Port Choice = CreateChoice(choices.Count - 1);
+                VisualElement Choice = CreateChoice(choices.Count - 1);
                 outputContainer.Add(Choice);
                 RefreshExpandedState();
             }
             else
             {
-                ValueType.value = bool.Parse(extraValues[0]);
-                Direction.value = bool.Parse(extraValues[1]);
-                dropdownobjects.value = extraValues[2];
-                dropdownmethods.value = extraValues[3];
+                ValueType.value = q_bool1;
+                Direction.value = q_bool2;
+                dropdownobjects.value = q_string1;
+                dropdownmethods.value = q_string2;
                 for (int i = 0; i < choices.Count; i++)
                 {
-                    Port Choice = CreateChoice(i);
+                    VisualElement Choice = CreateChoice(i);
                     outputContainer.Add(Choice);
                 }
             }
             ToggleCollapse(); ToggleCollapse();
         }
         #region Choice Element Creation
-        private Port CreateChoice(int id)
+        private VisualElement CreateChoice(int id)
         {
+            VisualElement container = new VisualElement();
             Port Choice = this.CreatePort("", Orientation.Horizontal, Direction.Output, Port.Capacity.Single);
             Choice.portName = $"Output";
+            VisualElement container2 = new VisualElement();
+            container.AddToClassList("multiContainer"); 
+            container2.AddToClassList("secondaryContainer");
             TextField choiceTextfield = DSElementUtilities.CreateTextField(choices[id], evt =>
             {
                 int indeX = Getindex(evt.previousValue);
                 choices[indeX] = evt.newValue;
             });
-            TextField ElementToggle = DSElementUtilities.CreateTextField(extraValues[id+4], evt => {
+            TextField ElementToggle = DSElementUtilities.CreateTextField(extraValues[id], evt => {
                 int indeX = Getindex(choiceTextfield.value);
-                extraValues[indeX + 4] =evt.newValue.ToString();
+                extraValues[indeX] =evt.newValue.ToString();
             });
             Button DeleteChoice = DSElementUtilities.CreateButton("X", () => {
                 if (choices.Count == 1)
@@ -161,17 +159,16 @@ namespace DSystem.Elements
                 }
                 int indeX = Getindex(choiceTextfield.value);
                 choices.RemoveAt(indeX);
-                extraValues.RemoveAt(indeX + 4);
-                GraphView.RemoveElement(Choice);
-                textfoldout.Remove(ElementToggle);
+                extraValues.RemoveAt(indeX);
+                outputContainer.Remove(container);
             });
-
-            DeleteChoice.AddToClassList("DeleteButton");
-            choiceTextfield.AddToClassList("ChoiceText");
-            Choice.Add(DeleteChoice);
-            Choice.Add(choiceTextfield);
-            textfoldout.Add(ElementToggle);
-            return Choice;
+            output.Add(Choice); container2.Add(Choice);
+            container2.Add(ElementToggle);
+        
+            container.Add(container2);
+            container.Add(choiceTextfield);
+            container.Add(DeleteChoice);
+            return container;
         }
         private int Getindex(string text)
         {

@@ -35,9 +35,7 @@ namespace DSystem.Elements
         public override void DrawSingle()
         {
             base.DrawSingle();
-            Choice = this.CreatePort("Output");
-            Choice.portName = $"{Id}Output";
-            outputContainer.Add(Choice);
+            
 
             RefreshExpandedState();
 

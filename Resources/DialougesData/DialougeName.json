@@ -1,82 +1,52 @@
 {
   "name": "DialougeName",
-  "id": 2,
+  "id": 1,
   "startIndex": 0,
   "Nodes": [
     {
       "CommentIndex": 0,
-      "Name": "SingleNode-ID:0",
-      "Id": 0,
-      "Text": [
-        "Hello"
+      "name": "SingleNode-ID:0",
+      "id": 0,
+      "dialougeText": [
+        "Hello Friend",
+        "How are you doing ?",
+        "Good, thankyou"
       ],
-      "Extra": [
+      "extraValues": [
+        "0",
+        "0",
+        "False",
+        "0",
+        "0",
+        "False",
         "0",
         "0",
         "False"
       ],
-      "Choices": [
+      "choices": [
         "Dialouge"
       ],
-      "Pos": {
-        "x": 199.0,
-        "y": 191.0,
+      "pos": {
+        "x": 825.0,
+        "y": 242.0,
         "normalized": {
-          "x": 0.7214598,
-          "y": 0.692456365,
+          "x": 0.959569037,
+          "y": 0.281473577,
           "magnitude": 1.0,
           "sqrMagnitude": 1.00000012
         },
-        "magnitude": 275.829651,
-        "sqrMagnitude": 76082.0
-      },
-      "NodeType": 0,
-      "ConnectedNodes": [
-        1
-      ],
-      "subType": 0,
-      "Obj": "",
-      "Method": "",
-      "pause": false,
-      "hasParameter": false,
-      "Tag": null
-    },
-    {
-      "CommentIndex": 0,
-      "Name": "SingleNode-ID:1",
-      "Id": 1,
-      "Text": [
-        "Hi"
-      ],
-      "Extra": [
-        "0",
-        "0",
-        "False"
-      ],
-      "Choices": [
-        "Dialouge"
-      ],
-      "Pos": {
-        "x": 489.0,
-        "y": 191.0,
-        "normalized": {
-          "x": 0.9314675,
-          "y": 0.3638247,
-          "magnitude": 1.0,
-          "sqrMagnitude": 1.00000012
-        },
-        "magnitude": 524.9781,
-        "sqrMagnitude": 275602.0
+        "magnitude": 859.761,
+        "sqrMagnitude": 739189.0
       },
       "NodeType": 0,
       "ConnectedNodes": [
         -1
       ],
       "subType": 0,
-      "Obj": "",
-      "Method": "",
-      "pause": false,
-      "hasParameter": false,
+      "q_string1": null,
+      "q_string2": null,
+      "q_bool1": false,
+      "q_bool2": false,
       "Tag": null
     }
   ],

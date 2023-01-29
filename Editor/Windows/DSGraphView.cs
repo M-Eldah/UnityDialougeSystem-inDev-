@@ -78,7 +78,7 @@ namespace DSystem
         /// </summary>
         private void AddManipulators()
         {
-            SetupZoom(.1f, 10);
+            SetupZoom(0.1f, 10,1,0.5f);
             this.AddManipulator(CreatecopyNode());
             this.AddManipulator(CreateNodeContextualmenu("Add (SingleNode)", NodeType.DialougeNode , SubType.SingleNode));
             this.AddManipulator(CreateNodeContextualmenu("Add (MultiNode)", NodeType.DialougeNode  , SubType.MultiNode));
@@ -184,6 +184,7 @@ namespace DSystem
                     Type nodeType = Type.GetType($"DSystem.Elements.DS{subType}");
                     DialougeNode node = (DialougeNode)Activator.CreateInstance(nodeType);
                     node.title = $"{subType}-ID:{id}";
+                    node.nodeName = node.title;
                     node.Id = id;
                     id++;
                     node.Initialize(pos, this);
@@ -212,6 +213,7 @@ namespace DSystem
                     Type UtilitynodeType = Type.GetType($"DSystem.Elements.DS{subType}");
                     UtilityNode Utilitynode = (UtilityNode)Activator.CreateInstance(UtilitynodeType);
                     Utilitynode.title = $"{subType}-ID:{id}";
+                    Utilitynode.nodeName = Utilitynode.title;
                     Utilitynode.Id = id;
                     id++;
                     Utilitynode.Initialize(pos,this);

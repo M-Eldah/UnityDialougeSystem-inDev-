@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 namespace DSystem.Elements
 {
     using System;
+    using UnityEngine.Accessibility;
     using utilities;
     public class DSMultiNode : DialougeNode
     {
@@ -44,7 +45,7 @@ namespace DSystem.Elements
             {
                 choices.Add($"New Choice{choices.Count}");
                 extraValues.Add("False");
-                Port Choice = CreateChoice(choices.Count - 1);
+                VisualElement Choice = CreateChoice(choices.Count - 1);
                 outputContainer.Add(Choice);
                 RefreshExpandedState();
             }
@@ -56,7 +57,7 @@ namespace DSystem.Elements
             {
                 choices.Add($"New Choice{choices.Count}");
                 extraValues.Add("False");
-                Port Choice = CreateChoice(choices.Count - 1);
+                VisualElement Choice = CreateChoice(choices.Count - 1);
                 outputContainer.Add(Choice);
                 RefreshExpandedState();
             }
@@ -64,16 +65,19 @@ namespace DSystem.Elements
             {
                 for (int i = 0; i < choices.Count; i++)
                 {
-                    Port Choice = CreateChoice(i);
+                    VisualElement Choice = CreateChoice(i);
                     outputContainer.Add(Choice);
                 }
             }
             ToggleCollapse(); ToggleCollapse();
         }
         #region Choice Element Creation
-        private Port CreateChoice(int id)
+        private VisualElement CreateChoice(int id)
         {
+            VisualElement container = new VisualElement();
+            container.AddToClassList("multiContainer");
             Port Choice = this.CreatePort("", Orientation.Horizontal, Direction.Output, Port.Capacity.Single);
+            output.Add( Choice );
             Choice.portName = $"Output";
             TextField choiceTextfield = DSElementUtilities.CreateTextField(choices[id], evt => 
             {
@@ -84,8 +88,9 @@ namespace DSystem.Elements
                 int indeX = Getindex(choiceTextfield.value);
                 extraValues[indeX] = (string)Convert.ChangeType(evt.newValue, typeof(string));
                 });
-            ElementToggle.value = (Boolean)Convert.ChangeType(extraValues[id], typeof(Boolean));
-            Button DeleteChoice = DSElementUtilities.CreateButton("X", ()=> { 
+            
+                ElementToggle.value = (Boolean)Convert.ChangeType(extraValues[id], typeof(Boolean));
+                Button DeleteChoice = DSElementUtilities.CreateButton("X", ()=> { 
                 if(choices.Count==1)
                 {
                     return;
@@ -95,20 +100,22 @@ namespace DSystem.Elements
                     GraphView.DeleteElements(Choice.connections);
                 }
                 int indeX = Getindex(choiceTextfield.value);
-                Debug.Log(indeX);
-                Debug.Log(choices.Count);
+
                 choices.RemoveAt(indeX);
-                extraValues.RemoveAt(indeX);
-                GraphView.RemoveElement(Choice);
-                textfoldout.Remove(ElementToggle);
+                extraValues.RemoveAt(indeX);output.Remove(Choice);
+                outputContainer.Remove(container);
             });
-           
+            VisualElement container2 = new VisualElement();
+            container2.AddToClassList("secondaryContainer");
             DeleteChoice.AddToClassList("DeleteButton");
             choiceTextfield.AddToClassList("ChoiceText");
-            Choice.Add(choiceTextfield);
-            Choice.Add(DeleteChoice);
-            textfoldout.Add(ElementToggle);
-            return Choice;
+            container2.Add(ElementToggle);
+            container2.Add(Choice);
+            container.Add(container2);
+            container.Add(choiceTextfield);
+            container.Add(DeleteChoice);
+            
+            return container;
         }
         private int Getindex(string text)
         {

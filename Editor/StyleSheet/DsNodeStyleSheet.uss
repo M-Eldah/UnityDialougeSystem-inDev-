@@ -64,6 +64,18 @@
 	/*Allows the text box to expand to fit the text once maximum length have been reached*/
 	white-space:Normal;
 }
+.multiContainer
+{
+	background-color:#192a56;
+	max-width: 240px;
+
+margin-top: 2px;
+margin-bottom: 2px;
+}
+.secondaryContainer
+{
+	flex-direction: row;
+}
 /*DSystem-node_custom-data-Container
 {
 	background-color:#58B19F;
