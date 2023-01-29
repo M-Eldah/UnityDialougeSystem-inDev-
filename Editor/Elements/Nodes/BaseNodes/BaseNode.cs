@@ -9,6 +9,8 @@ namespace DSystem.Elements
 
     public class BaseNode : Node
     {
+        
+        public List<Port> output = new List<Port>();
         public Vector2 pos;
         public string nodeName;
         public int groupid;
@@ -63,7 +65,7 @@ namespace DSystem.Elements
         public void SaveConnections()
         {
             connections.Clear();
-            foreach (Port port in outputContainer.Children())
+            foreach (Port port in output)
             {
                 if (!port.connected)
                 {
@@ -79,7 +81,7 @@ namespace DSystem.Elements
         public List<Edge> DisconnectPorts()
         {
             List<Edge> edges = new List<Edge>();
-            foreach (Port port in outputContainer.Children())
+            foreach (Port port in output)
             {
                 edges.AddRange(port.connections);
             }
@@ -93,11 +95,7 @@ namespace DSystem.Elements
         public List<Edge> nodeConnect(Dictionary<int, BaseNode> Nodes)
         {
             List<Edge> edge = new List<Edge>();
-            List<Port> output = new List<Port>();
-            foreach (Port port in outputContainer.Children())
-            {
-                output.Add(port);
-            }
+
             for (int i = 0; i < connections.Count; i++)
             {
                 if (connections[i] != -1)

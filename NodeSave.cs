@@ -67,19 +67,18 @@ public class NodeDB
         this.q_bool2 = q_bool2;
         Tag = tag;
     }
-    //Long Class Constructor goes brrrrrrrrrrrrrrrrrrr
 
 }
 
 //this is used to save Groups
-//have you been using nodes to make your dialouge easier to navigate, you should
+//have you been using Groups to make your dialouge easier to navigate, you should
 public class GroupsDB
 {
-    //I ran out comedy
+
     public string GroupName;
-    //He can take on lots of nodes at once don't worry >0                                               
+                                         
     public List<int> ContainedNodes;
-    //Line 32
+
     public Vector2 Position;
     public GroupsDB(string name, List<int> _Cnodes, Vector2 pos)
     {

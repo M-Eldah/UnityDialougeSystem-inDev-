@@ -6,7 +6,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
 using UnityEditor.Experimental.GraphView;
-
+using UnityEngine;
 
 public class SaveUtility
 {
@@ -18,7 +18,8 @@ public class SaveUtility
         List<NodeDB> nodes = new List<NodeDB>();
         foreach(BaseNode node in CurrentGraphview.nodes.ToList())
         {
-            NodeDB snodeDB=new NodeDB(node.name,node.Id,node.dialougeText,node.extraValues,node.choices,node.pos,node.mainType,node.connections,node.subType,node.q_string1,node.q_string2,node.q_bool1,node.q_bool2,node.Tag);
+            Debug.Log(node.nodeName);
+            NodeDB snodeDB=new NodeDB(node.nodeName,node.Id,node.dialougeText,node.extraValues,node.choices,node.GetPosition().position,node.mainType,node.connections,node.subType,node.q_string1,node.q_string2,node.q_bool1,node.q_bool2,node.Tag);
             nodes.Add( snodeDB);  
         }
         return nodes;

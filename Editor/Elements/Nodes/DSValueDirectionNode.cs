@@ -41,7 +41,7 @@ namespace DSystem.Elements
         public override void Draw()
         {
             //Main Container
-            base.Draw();
+            base.Draw(true, "Value");
             if (extraValues.Count == 0)
             {
                 extraValues.Add("False"); extraValues.Add("False");
@@ -101,6 +101,7 @@ namespace DSystem.Elements
             {
                 choices.Add("Value");
                 Port Choice = CreateChoice(choices.Count - 1);
+              
                 outputContainer.Add(Choice);
                 RefreshExpandedState();
             }
@@ -138,6 +139,7 @@ namespace DSystem.Elements
         private Port CreateChoice(int id)
         {
             Port Choice = this.CreatePort("", Orientation.Horizontal, Direction.Output, Port.Capacity.Single);
+            output.Add(Choice);
             Choice.portName = $"Output";
             TextField Value = DSElementUtilities.CreateTextField(choices[id], evt => {
                 int index = Getindex(evt.previousValue);

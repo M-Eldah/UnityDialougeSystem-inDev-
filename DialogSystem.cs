@@ -5,27 +5,41 @@ using System.IO;
 using System.Reflection;
 using UnityEngine;
 
+public class characterId
+{
+    public int id,expresion;
+
+    public characterId()
+    {
+    }
+    public characterId(int id, int expresion)
+    {
+        this.id = id;
+        this.expresion = expresion;
+    }
+}
 public class Dialouge
 {
     public string Text;
-    public bool DialougeLocked;
+    public bool locked;
 
-    public Dialouge(string text, bool dialougeLocked)
+    public Dialouge(string text, bool locked)
     {
         Text = text;
-        DialougeLocked = dialougeLocked;
+        this.locked = locked;
     }
 }
-
 public class DsData
 {
     public Dialouge Dialouge;
     public List<Dialouge> Choices;
-    public Sprite Face;
+    public characterId character;
     public bool Pause;
     public TextType type;
     public string Tag;
     public AudioClip clip;
+
+    
     //for utility nodes that have nothing to display
     public DsData(bool pause = false,string tag = "", AudioClip _clip = null)
     {
@@ -35,33 +49,36 @@ public class DsData
         clip = _clip;
         if (Pause == false)
         {
-            Debug.Log(Pause);
             DialogSystem.Next();
         }
     }
 
-    //
-    public DsData(bool pause = false, string Dialogue = null, bool Extra = false, string tag = "")
+    //for single Dialouge Node
+    public DsData(Dialouge Dialogue = null, characterId ch= null ,string tag = "")
     {
+        character = ch;
         Tag = tag;
-        Pause = pause;
-        string text = Dialogue;
-        bool dialougeLocked = Extra;
-        Dialouge = new Dialouge(text, dialougeLocked);
+        Dialouge = Dialogue;
         type = TextType.SingleNode;
     }
 
     //for nodes with multiple choices
-    public DsData(bool pause = false, List<string> Dialogue = null, List<bool> Extra = null, string tag = "")
+    public DsData(List<Dialouge> Dialogue = null, string tag = "")
     {
         Tag = tag;
-        Pause = pause;
-        Choices = new List<Dialouge>();
-        for (int i = 0; i < Dialogue.Count; i++)
-        {
-            Choices.Add(new Dialouge(Dialogue[i], Extra[i]));
-        }
+        Choices = Dialogue;
         type = TextType.MultiNode;
+    }
+
+    public DsData(Dialouge dialouge, List<Dialouge> choices, characterId character, bool pause, TextType type, string tag, AudioClip clip)
+    {
+        Dialouge = dialouge;
+        Choices = choices;
+        this.character = character;
+        Pause = pause;
+        this.type = type;
+        Tag = tag;
+        this.clip = clip;
     }
 }
 
@@ -95,7 +112,7 @@ public static class DialogSystem
     {
         load();
         data = _data;
-        Nodes = nodeDictionary(data.Nodes);
+        Nodes = NodeDictionary(data.Nodes);
         InDialouge = true;
         currentindex = Records[data.name].startindex;
         return NodeDataReturn();
@@ -145,23 +162,61 @@ public static class DialogSystem
         if (Nodes[currentindex].subType == SubType.SingleNode || Nodes[currentindex].subType == SubType.RandomNode || Nodes[currentindex].subType == SubType.MRandomNode)
         {
             CheckModifiedData();
-            int Extraid = Nodes[currentindex].CommentIndex;
-            bool locked;
-            if (Nodes[currentindex].subType == SubType.MRandomNode)
-            {
-                locked = bool.Parse(Nodes[currentindex].extraValues[(Extraid * 3) + 6]);
-            }
-            else
-            {
-                locked = bool.Parse(Nodes[currentindex].extraValues[(Extraid * 3) + 2]);
-            }
-            return new DsData(false, Nodes[currentindex].dialougeText[Extraid], locked, Nodes[currentindex].Tag);
+            DsData singeNode = SingleNodeData();
+            return singeNode;
         }
-        return new DsData(false, Nodes[currentindex].choices, UnlockedList(Nodes[currentindex].subType, Nodes[currentindex].extraValues), Nodes[currentindex].Tag);
+        return new DsData(UnlockedList(Nodes[currentindex].subType, Nodes[currentindex].choices, Nodes[currentindex].extraValues),Nodes[currentindex].Tag);
     }
+
+    private static DsData SingleNodeData()
+    {
+        int Extraid = Nodes[currentindex].CommentIndex;
+        int ExtraGuide = Extraid * 3;
+        string ChDiaoluge = "";
+        bool locked=false;
+        characterId id = new characterId();
+        switch (Nodes[currentindex].subType)
+        { 
+            case SubType.SingleNode:
+                ChDiaoluge = Nodes[currentindex].dialougeText[Extraid];
+                id = new characterId(int.Parse(Nodes[currentindex].extraValues[ExtraGuide]), int.Parse(Nodes[currentindex].extraValues[ExtraGuide+1]));
+                locked=bool.Parse(Nodes[currentindex].extraValues[ExtraGuide+2]);
+                break;
+            case SubType.RandomNode:
+                Extraid = UnityEngine.Random.Range(0, Nodes[currentindex].dialougeText.Count);
+                ExtraGuide = Extraid * 3;
+                ChDiaoluge = Nodes[currentindex].dialougeText[Extraid];
+                id = new characterId(int.Parse(Nodes[currentindex].extraValues[ExtraGuide]), int.Parse(Nodes[currentindex].extraValues[ExtraGuide+1]));
+                locked = bool.Parse(Nodes[currentindex].extraValues[ExtraGuide + 2]);
+                break;
+            case SubType.MRandomNode:
+                bool valuetype = Nodes[currentindex].q_bool1;
+                bool greater = Nodes[currentindex].q_bool2;
+                GameObject gameObject = GameObject.Find(Nodes[currentindex].q_string1);
+                var ran = Value(gameObject, Nodes[currentindex].q_string2, valuetype);
+                if (greater)
+                {
+                    Extraid = UnityEngine.Random.Range(Mathf.FloorToInt((float)ran), Nodes[currentindex].dialougeText.Count);
+                }
+                else
+                {
+                    Extraid = UnityEngine.Random.Range(0, Nodes[currentindex].dialougeText.Count - Mathf.FloorToInt((float)ran));
+                }
+
+                ExtraGuide = Extraid * 3;
+                id = new characterId(int.Parse(Nodes[currentindex].extraValues[ExtraGuide]), int.Parse(Nodes[currentindex].extraValues[ExtraGuide + 1]));
+                locked = bool.Parse(Nodes[currentindex].extraValues[ExtraGuide + 2]);
+                break;
+
+        }
+
+        return new DsData(new Dialouge(ChDiaoluge,locked), id,Nodes[currentindex].Tag); 
+    }
+
     private static bool NodeAction()
     {
         bool pause = false;
+        Debug.Log(currentindex);
         switch (Nodes[currentindex].subType)
         {
             /// <summary>
@@ -264,27 +319,6 @@ public static class DialogSystem
                     gameObject2.SendMessage(Nodes[currentindex].q_string2, Convert.ChangeType(Nodes[currentindex].extraValues[0], ps[0].ParameterType));
                 }
                 pause = Nodes[currentindex].q_bool1;
-                break;
-            #endregion
-            #region RandomNodes
-            case SubType.RandomNode:
-                Nodes[currentindex].CommentIndex = UnityEngine.Random.Range(0, Nodes[currentindex].dialougeText.Count);
-                break;
-
-            case SubType.MRandomNode:
-                bool valuetype = bool.Parse(Nodes[currentindex].extraValues[0]);
-                bool greater = bool.Parse(Nodes[currentindex].extraValues[1]);
-                GameObject gameObject = GameObject.Find(Nodes[currentindex].extraValues[2]);
-                var ran = Value(gameObject, Nodes[currentindex].extraValues[3], valuetype);
-                Debug.Log(ran);
-                if (greater)
-                {
-                    Nodes[currentindex].CommentIndex = UnityEngine.Random.Range(Mathf.FloorToInt((float)ran), Nodes[currentindex].dialougeText.Count);
-                }
-                else
-                {
-                    Nodes[currentindex].CommentIndex = UnityEngine.Random.Range(0, Nodes[currentindex].dialougeText.Count - Mathf.FloorToInt((float)ran));
-                }
                 break;
             #endregion
             #region ChoiceUnlockNode
@@ -397,16 +431,16 @@ public static class DialogSystem
     /// <summary>
     /// Creating the boolean list used for choice noodes
     /// </summary>
-    private static List<bool> UnlockedList(SubType type, List<string> Extra)
+    private static List<Dialouge> UnlockedList(SubType type, List<string> Dialouge, List<string> Extra)
     {
-        List<bool> Unlocks = new List<bool>();
+        List<Dialouge> Unlocks = new List<Dialouge>();
         switch (type)
         {
             case SubType.MultiNode:
                 CheckModifiedData();
                 for (int i = 0; i < Extra.Count; i++)
                 {
-                    Unlocks.Add(bool.Parse(Extra[i]));
+                        Unlocks.Add(new(Dialouge[i], bool.Parse(Extra[i])));
                 }
                 break;
 
@@ -418,25 +452,29 @@ public static class DialogSystem
                 float limit = float.Parse(ran.ToString());
                 if (greater)
                 {
-                    for (int i = 4; i < Extra.Count; i++)
+                    for (int i = 0; i < Extra.Count; i++)
                     {
                         if (float.Parse(Extra[i]) >= limit)
-                        { Unlocks.Add(false); }
+                        {
+                            Unlocks.Add(new(Dialouge[i], false));
+                        }
                         else
                         {
-                            Unlocks.Add(true);
+                            Unlocks.Add(new(Dialouge[i], true));
                         }
                     }
                 }
                 else
                 {
-                    for (int i = 0; i > Extra.Count; i++)
+                    for (int i = 0; i < Extra.Count; i++)
                     {
-                        if (float.Parse(Extra[i + 4]) >= limit)
-                        { Unlocks.Add(false); }
+                        if (float.Parse(Extra[i]) <= limit)
+                        {
+                            Unlocks.Add(new(Dialouge[i], false));
+                        }
                         else
                         {
-                            Unlocks.Add(true);
+                            Unlocks.Add(new(Dialouge[i], true));
                         }
                     }
                 }
@@ -472,7 +510,6 @@ public static class DialogSystem
 
     public static void Save()
     {
-        Debug.Log("TouchDown");
         string savefile = $"{Application.persistentDataPath}/DialougeRecord.json";
         string jsondata = JsonConvert.SerializeObject(Records, Formatting.Indented, new JsonSerializerSettings
         {
@@ -512,7 +549,7 @@ public static class DialogSystem
         }
     }
 
-    public static Dictionary<int, NodeDB> nodeDictionary(List<NodeDB> nodes)
+    public static Dictionary<int, NodeDB> NodeDictionary(List<NodeDB> nodes)
     {
         Dictionary<int, NodeDB> nodeD = new Dictionary<int, NodeDB>();
         foreach (NodeDB n in nodes)

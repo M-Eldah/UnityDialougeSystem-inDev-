@@ -72,6 +72,7 @@ namespace DSystem.utilities
                 value = value
                 
             };
+            textField.multiline= true;
             if (onValueChanged != null)
             {
                 textField.RegisterValueChangedCallback(onValueChanged);
@@ -81,7 +82,6 @@ namespace DSystem.utilities
         public static TextField CreateTextArea(string value = null, EventCallback<ChangeEvent<string>> onValueChanged = null)
         {
             TextField textArea = CreateTextField(value, onValueChanged);
-            textArea.multiline = true;
             return textArea;
         }
         #endregion

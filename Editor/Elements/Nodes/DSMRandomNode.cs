@@ -37,45 +37,36 @@ namespace DSystem.Elements
         }
         public override void DrawSingle()
         {
-            offset = 4;
-            base.DrawSingle();
-            Choice = this.CreatePort("Output");
-            Choice.portName = $"{Id}Output";
-            outputContainer.Add(Choice);
-            if (extraValues.Count == 3)
-            {
-                extraValues.Insert(0,"False"); extraValues.Insert(1,"False");
-                extraValues.Insert(2,"NA"); extraValues.Insert(3,"NA");
-            }
+            base.DrawSingle(); 
             Toggle ValueType = DSElementUtilities.CreateToggle("Property");
             ValueType.tooltip = "Type of value you want to change";
             ValueType.RegisterValueChangedCallback(evt =>
             {
-                extraValues[0] = evt.newValue.ToString();
-                ValueType.label = bool.Parse(extraValues[0]) ? "Field" : "Property";
+                q_bool1 = evt.newValue;
+                ValueType.label = q_bool1 ? "Field" : "Property";
             }
             );
             Toggle Direction = DSElementUtilities.CreateToggle("Lower");
             Direction.tooltip = "Type of value you want to change";
             Direction.RegisterValueChangedCallback(evt =>
             {
-                extraValues[1] = evt.newValue.ToString();
-                Direction.label = bool.Parse(extraValues[1]) ? "Greater" : "Lower";
+                q_bool2 = evt.newValue;
+                Direction.label = q_bool2 ? "Greater" : "Lower";
             }
             );
             DropdownField dropdownmethods = DSElementUtilities.CreateDropDownMenu("Properties",
             evt =>
             {
-                extraValues[3] = evt.newValue;
+                q_string2 = evt.newValue;
             });
             DropdownField dropdownobjects = DSElementUtilities.CreateDropDownMenu("Objects", v =>
             {
-                extraValues[2] = v.newValue;
+                q_string1 = v.newValue;
                 GameObject gameObject = GameObject.Find(v.newValue);
                 if (gameObject != null)
                 {
                     dropdownmethods.choices.Clear();
-                    if (!bool.Parse(extraValues[0]))
+                    if (!q_bool1)
                     {
                         List<PropertyInfo> methodz = UtilityFunctions.GetProperties(gameObject);
                         foreach (PropertyInfo method in methodz)
@@ -105,12 +96,12 @@ namespace DSystem.Elements
             textfoldout.Insert(1, Direction);
             textfoldout.Insert(2, dropdownobjects);
             textfoldout.Insert(3, dropdownmethods);
-            if(extraValues.Count>3)
+            if(q_string1!=null)
             {
-                ValueType.value = bool.Parse(extraValues[0]);
-                Direction.value = bool.Parse(extraValues[1]);
-                dropdownobjects.value = extraValues[2];
-                dropdownmethods.value = extraValues[3];
+                ValueType.value = q_bool1;
+                Direction.value = q_bool2;
+                dropdownobjects.value = q_string1;
+                dropdownmethods.value = q_string2;
             }
             RefreshExpandedState();
 
